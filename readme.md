@@ -1,18 +1,24 @@
-# TurboLinks .NET
+# Turbo.NET
 
-This is a sample [ASP.NET Core](https://asp.net) project working with [TurboLinks 5](https://github.com/turbolinks/turbolinks).
+This is a sample [ASP.NET Core](https://asp.net) project working with [Hotwire Turbo](https://hotwired.dev).
 
-> Turbolinks® makes navigating your web application faster. Get the performance benefits of a single-page application without the added complexity of a client-side JavaScript framework. Use HTML to render your views on the server side and link to pages as usual. When you follow a link, Turbolinks automatically fetches the page, swaps in its &lt;body&gt;, and merges its &lt;head&gt;, all without incurring the cost of a full page load.
+> Turbo® makes navigating your web application faster. Get the performance benefits of a single-page application without the added complexity of a client-side JavaScript framework. Use HTML to render your views on the server side and link to pages as usual. When you follow a link, Turbo automatically fetches the page, swaps in its &lt;body&gt;, and merges its &lt;head&gt;, all without incurring the cost of a full page load.
 
-## TurboLinksMiddleware
+## Changes between Turbolinks and Hotwire Turbo
 
-The `TurboLinksMiddleware` adds a `Turbolinks-Location` header to responses, allowing TurboLinks the ability to manage **visits** of the client.
+* Renamed 'Turbolinks' to 'Turbo' everywhere.
+* Used `turbo.es2017-esm.js` (from Turbo yarn build) as `wwwroot/lib/turbo/turbo.js`
+* Updated `Pages/Shared/_Layout.cshtml` to load `turbo.js` as a module (type="module")
+
+## TurboMiddleware
+
+The `TurboMiddleware` adds a `Turbo-Location` header to responses, allowing Turbo the ability to manage **visits** of the client.
 
 ```c#
-public class TurboLinksMiddleware : IMiddleware
+public class TurboMiddleware : IMiddleware
 {
-    public const string TurbolinksLocationHeader 
-        = "Turbolinks-Location";
+    public const string TurboLocationHeader 
+        = "Turbo-Location";
 
     public async Task InvokeAsync(
         HttpContext httpContext, 
@@ -24,7 +30,7 @@ public class TurboLinksMiddleware : IMiddleware
             {
                 if (ctx.IsTurboLinkRequest())
                 {
-                    ctx.Response.Headers.Add(TurbolinksLocationHeader, ctx.Request.GetEncodedUrl());
+                    ctx.Response.Headers.Add(TurboLocationHeader, ctx.Request.GetEncodedUrl());
                 }
             }
 
@@ -38,17 +44,17 @@ public class TurboLinksMiddleware : IMiddleware
 
 ## TurboLinkRedirectResult
 
-The `TurboLinkRedirectResult` class allows both **Razor Pages** and **ASP.NET MVC** to respond with a redirect that works with turbolinks. TurboLinks watches **Xhr** requests and will use the JavaScript snippets from the response to set state and clear cache.
+The `TurboLinkRedirectResult` class allows both **Razor Pages** and **ASP.NET MVC** to respond with a redirect that works with turbo. Turbo watches **Xhr** requests and will use the JavaScript snippets from the response to set state and clear cache.
 
 ```c#
 public class TurbolinkRedirectResult : RedirectResult
 {
-    public TurboLinksActions TurboLinksAction { get; }
+    public TurboActions TurboAction { get; }
 
-    public TurbolinkRedirectResult(string url, TurboLinksActions turboLinksAction = TurboLinksActions.Active) 
+    public TurbolinkRedirectResult(string url, TurboActions turboLinksAction = TurboActions.Active) 
         : base(url)
     {
-        TurboLinksAction = turboLinksAction;
+        TurboAction = turboLinksAction;
     }
 
     public override Task ExecuteResultAsync(ActionContext context)
@@ -56,10 +62,10 @@ public class TurbolinkRedirectResult : RedirectResult
         var httpContext = context.HttpContext;
         if (httpContext.IsXhrRequest())
         {
-            var action = TurboLinksAction.ToString().ToLower();
+            var action = TurboAction.ToString().ToLower();
             var content = httpContext.Request.Method == HttpMethods.Get
-                ? $"Turbolinks.visit('{this.Url}');"
-                : $"Turbolinks.clearCache();\nTurbolinks.visit('{this.Url}', {{ action: \"{ action }\" }});";
+                ? $"Turbo.visit('{this.Url}');"
+                : $"Turbo.clearCache();\nTurbo.visit('{this.Url}', {{ action: \"{ action }\" }});";
 
             var contentResult = new ContentResult {
                 Content = content,
@@ -80,7 +86,7 @@ public class TurbolinkRedirectResult : RedirectResult
     }
 }
 
-public enum TurboLinksActions
+public enum TurboActions
 {    
     Active,
     Replace
@@ -116,7 +122,7 @@ It is essential that the `POST` call happen via XHR as seen on the `Index` razor
 }
 ```
 
-We can use the `TurboLinksRedirectResult` using extension methods.
+We can use the `TurboRedirectResult` using extension methods.
 
 ### Razor Page Example
 
@@ -161,4 +167,4 @@ public class ValuesController : Controller
 
 ## Conclusion
 
-This works and can be tweaked to support more complex return values for Turbolinks, but I found through basic testing that it is unnecessary for my use case.
+This works and can be tweaked to support more complex return values for Turbo, but I found through basic testing that it is unnecessary for my use case.
