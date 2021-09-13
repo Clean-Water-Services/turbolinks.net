@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 
-namespace Turbolinks.Net
+namespace Turbo.Net
 {
-    public class TurbolinksMiddleware : IMiddleware
+    public class TurboMiddleware : IMiddleware
     {
-        public const string TurbolinksLocationHeader 
-            = "Turbolinks-Location";
+        public const string TurboLocationHeader 
+            = "Turbo-Location";
 
         public async Task InvokeAsync(
             HttpContext httpContext, 
@@ -19,9 +19,9 @@ namespace Turbolinks.Net
             httpContext.Response.OnStarting((state) => {
                 if (state is HttpContext ctx) 
                 {
-                    if (ctx.IsTurbolinksRequest())
+                    if (ctx.IsTurboRequest())
                     {
-                        ctx.Response.Headers.Add(TurbolinksLocationHeader, ctx.Request.GetEncodedUrl());
+                        ctx.Response.Headers.Add(TurboLocationHeader, ctx.Request.GetEncodedUrl());
                     }
                 }
 

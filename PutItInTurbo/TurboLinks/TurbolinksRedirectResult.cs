@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Turbolinks.Net
+namespace Turbo.Net
 {
-    public class TurbolinksRedirectResult : RedirectResult
+    public class TurboRedirectResult : RedirectResult
     {
-        public TurbolinksActions TurbolinksAction { get; }
+        public TurboActions TurboAction { get; }
 
-        public TurbolinksRedirectResult(string url, TurbolinksActions turbolinksAction = TurbolinksActions.Active) 
+        public TurboRedirectResult(string url, TurboActions turboAction = TurboActions.Active) 
             : base(url)
         {
-            TurbolinksAction = turbolinksAction;
+            TurboAction = turboAction;
         }
 
         public override Task ExecuteResultAsync(ActionContext context)
@@ -21,10 +21,10 @@ namespace Turbolinks.Net
             var httpContext = context.HttpContext;
             if (httpContext.IsXhrRequest())
             {
-                var action = TurbolinksAction.ToString().ToLower();
+                var action = TurboAction.ToString().ToLower();
                 var content = httpContext.Request.Method == HttpMethods.Get
-                    ? $"Turbolinks.visit('{this.Url}');"
-                    : $"Turbolinks.clearCache();\nTurbolinks.visit('{this.Url}', {{ action: \"{ action }\" }});";
+                    ? $"Turbo.visit('{this.Url}');"
+                    : $"Turbo.clearCache();\nTurbo.visit('{this.Url}', {{ action: \"{ action }\" }});";
 
                 var contentResult = new ContentResult {
                     Content = content,
@@ -45,7 +45,7 @@ namespace Turbolinks.Net
         }
     }
 
-    public enum TurbolinksActions
+    public enum TurboActions
     {    
         Active,
         Replace

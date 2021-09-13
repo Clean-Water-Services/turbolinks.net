@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Turbolinks.Net;
+using Turbo.Net;
 
 namespace PutItInTurbo.Controllers
 {
@@ -10,7 +10,7 @@ namespace PutItInTurbo.Controllers
         [HttpPost, Route("")]
         public IActionResult Index()
         {
-            return this.TurbolinksRedirectToPage("/Privacy");
+            return this.TurboRedirectToPage("/Privacy");
         }
     }
 }

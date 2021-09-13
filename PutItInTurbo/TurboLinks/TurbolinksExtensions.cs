@@ -4,83 +4,83 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Turbolinks.Net
+namespace Turbo.Net
 {
-    public static class TurbolinksExtensions
+    public static class TurboExtensions
     {
         public static IApplicationBuilder 
-            UseTurbolinks(this IApplicationBuilder app) => 
-            app.UseMiddleware<TurbolinksMiddleware>();
+            UseTurbo(this IApplicationBuilder app) => 
+            app.UseMiddleware<TurboMiddleware>();
 
         public static IServiceCollection
-            AddTurbolinks(this IServiceCollection serviceCollection) =>
-            serviceCollection.AddSingleton<TurbolinksMiddleware>();
+            AddTurbo(this IServiceCollection serviceCollection) =>
+            serviceCollection.AddSingleton<TurboMiddleware>();
 
-        public static bool IsTurbolinksRequest(this HttpContext ctx) =>
-            ctx.Request.Headers.ContainsKey("Turbolinks-Referrer");
+        public static bool IsTurboRequest(this HttpContext ctx) =>
+            ctx.Request.Headers.ContainsKey("Turbo-Referrer");
 
         public static bool IsXhrRequest(this HttpContext ctx) =>
             ctx.Request.Headers.TryGetValue("X-Requested-With", out var result) && 
             result == "XMLHttpRequest";
         
-        public static IActionResult TurbolinksRedirectToPage(this PageModel model, 
+        public static IActionResult TurboRedirectToPage(this PageModel model, 
             string pageName,
             string pageHandler = null,
             object values = null,
             string protocol = null,
-            TurbolinksActions turbolinksAction = TurbolinksActions.Active)
+            TurboActions turboAction = TurboActions.Active)
         {
             var url = model.Url.Page(pageName, pageHandler, values, protocol);
-            return new TurbolinksRedirectResult(url, turbolinksAction);
+            return new TurboRedirectResult(url, turboAction);
         }
         
-        public static IActionResult TurbolinksRedirectToAction(this PageModel target, 
+        public static IActionResult TurboRedirectToAction(this PageModel target, 
             string action, 
             string controller,
             object values = null,
-            TurbolinksActions turbolinksAction = TurbolinksActions.Active)
+            TurboActions turboAction = TurboActions.Active)
         {
             var url = target.Url.Action(action, controller, values);
-            return new TurbolinksRedirectResult(url, TurbolinksActions.Active);
+            return new TurboRedirectResult(url, TurboActions.Active);
         }
         
-        public static IActionResult TurbolinksRedirectToAction(this PageModel target, 
+        public static IActionResult TurboRedirectToAction(this PageModel target, 
             string action, 
             object values = null,
-            TurbolinksActions turbolinksAction = TurbolinksActions.Active)
+            TurboActions turboAction = TurboActions.Active)
         {
             var url = target.Url.Action(action, values);
-            return new TurbolinksRedirectResult(url, turbolinksAction);
+            return new TurboRedirectResult(url, turboAction);
         }
         
-        public static IActionResult TurbolinksRedirectToPage(this Controller model, 
+        public static IActionResult TurboRedirectToPage(this Controller model, 
             string pageName, 
             string pageHandler = null, 
             object values = null,
             string protocol = null,
-            TurbolinksActions turbolinksAction = TurbolinksActions.Active)
+            TurboActions turboAction = TurboActions.Active)
         {
             var url = model.Url.Page(pageName, pageHandler, values, protocol);
-            return new TurbolinksRedirectResult(url, turbolinksAction);
+            return new TurboRedirectResult(url, turboAction);
         }
 
-        public static IActionResult TurbolinksRedirectToAction(this Controller target, 
+        public static IActionResult TurboRedirectToAction(this Controller target, 
             string action, 
             string controller,
             object values = null,
-            TurbolinksActions turbolinksAction = TurbolinksActions.Active)
+            TurboActions turboAction = TurboActions.Active)
         {
             var url = target.Url.Action(action, controller, values);
-            return new TurbolinksRedirectResult(url, turbolinksAction);
+            return new TurboRedirectResult(url, turboAction);
         }
         
-        public static IActionResult TurbolinksRedirectToAction(this Controller target, 
+        public static IActionResult TurboRedirectToAction(this Controller target, 
             string action, 
             object values = null,
-            TurbolinksActions turbolinksAction = TurbolinksActions.Active)
+            TurboActions turboAction = TurboActions.Active)
         {
             var url = target.Url.Action(action, values);
-            return new TurbolinksRedirectResult(url, turbolinksAction);
+            return new TurboRedirectResult(url, turboAction);
         }
     }
 }

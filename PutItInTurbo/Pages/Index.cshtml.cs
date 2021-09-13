@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Turbolinks.Net;
+using Turbo.Net;
 
 namespace PutItInTurbo.Pages
 {
@@ -28,7 +28,7 @@ namespace PutItInTurbo.Pages
 
         public IActionResult OnPost()
         {
-            return this.TurbolinksRedirectToPage("Privacy");
+            return this.TurboRedirectToPage("Privacy");
         }
     }
 }
