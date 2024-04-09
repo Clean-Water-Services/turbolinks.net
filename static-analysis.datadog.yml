@@ -1,0 +1,12 @@
+rulesets:
+  - csharp-best-practices
+  - csharp-security
+  - java-security
+  - javascript-best-practices
+  - javascript-node-security
+  - jsx-react
+  - python-best-practices
+  - python-security
+  - tsx-react
+  - typescript-best-practices
+  - typescript-node-security
