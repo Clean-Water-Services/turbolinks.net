@@ -2,8 +2,10 @@
 # For more info, https://us3.datadoghq.com/ci/setup/code-analysis
 
 on: 
-#  push:
-#    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 1 * *'
   workflow_dispatch:
 
 name: Datadog Code Analysis
